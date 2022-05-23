@@ -36,7 +36,7 @@ jobs:
           apt-get update
           apt-get install --yes postgresql-client
       - name: Install PostgreSQL Database Testing Environment
-        run: psql -h ${{ secrets.PGHOST_TEST }} -U ${{ secrets.PGUSER_TEST }} -c 'CREATE DATABASE ${{ secrets.PGDATABASE_TEST }};'
+        run: psql -h postgres -U postgres -c 'CREATE DATABASE ${{ secrets.PGDATABASE_TEST }};'
         env:
           PGPASSWORD: ${{ secrets.PGPASSWORD_TEST }}
       - name: npm install migrate and test
@@ -46,16 +46,16 @@ jobs:
           npm run test
         env:
           CI: true
-          PGHOST_TEST: ${{ secrets.PGHOST_TEST }}
-          PGUSER_TEST: ${{ secrets.PGUSER_TEST }}
+          PGHOST_TEST: postgres # ${{ secrets.PGHOST_TEST }}
+          PGUSER_TEST: postgres # ${{ secrets.PGUSER_TEST }}
           PGDATABASE_TEST: ${{ secrets.PGDATABASE_TEST }}
-          PGPASSWORD_TEST: ${{ secrets.PGPASSWORD_TEST }}
-          PGPORT_TEST: ${{ secrets.PGPORT_TEST }}
-          PGHOST: ${{ secrets.PGHOST_TEST }}
-          PGUSER: ${{ secrets.PGUSER_TEST }}
+          PGPASSWORD_TEST: postgres # ${{ secrets.PGPASSWORD_TEST }}
+          PGPORT_TEST: 5432 # ${{ secrets.PGPORT_TEST }}
+          PGHOST: postgres # ${{ secrets.PGHOST_TEST }}
+          PGUSER: postgres # ${{ secrets.PGUSER_TEST }}
           PGDATABASE: ${{ secrets.PGDATABASE_TEST }}
-          PGPASSWORD: ${{ secrets.PGPASSWORD_TEST }}
-          PGPORT: ${{ secrets.PGPORT_TEST }}
+          PGPASSWORD: postgres # ${{ secrets.PGPASSWORD_TEST }}
+          PGPORT: 5432 # ${{ secrets.PGPORT_TEST }}
           ACCESS_TOKEN_KEY: ${{ secrets.ACCESS_TOKEN_KEY }}
           REFRESH_TOKEN_KEY: ${{ secrets.REFRESH_TOKEN_KEY }}
 
