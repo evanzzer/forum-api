@@ -8,7 +8,7 @@ on:
 jobs:
   container-job:
     runs-on: ubuntu-latest
-    container: node:14.5.0-alpine
+    container: node:14.17.3-alpine3.14
 
     services:
       postgres:
@@ -23,7 +23,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [14.5.0]
+        node-version: [14.17.3]
 
     steps:
       - uses: actions/checkout@v2
