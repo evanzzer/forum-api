@@ -31,14 +31,14 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Install PostgreSQL client
-        run: |
-          apt-get update
-          apt-get install --yes postgresql-client
-      - name: Install PostgreSQL Database Testing Environment
-        run: psql -h postgres -U postgres -c 'CREATE DATABASE ${{ secrets.PGDATABASE_TEST }};'
-        env:
-          PGPASSWORD: ${{ secrets.PGPASSWORD_TEST }}
+#      - name: Install PostgreSQL client
+#        run: |
+#          apt-get update
+#          apt-get install --yes postgresql-client
+#      - name: Install PostgreSQL Database Testing Environment
+#        run: psql -h postgres -U postgres -c 'CREATE DATABASE ${{ secrets.PGDATABASE_TEST }};'
+#        env:
+#          PGPASSWORD: ${{ secrets.PGPASSWORD_TEST }}
       - name: npm install migrate and test
         run: |
           npm install
@@ -48,12 +48,12 @@ jobs:
           CI: true
           PGHOST_TEST: postgres # ${{ secrets.PGHOST_TEST }}
           PGUSER_TEST: postgres # ${{ secrets.PGUSER_TEST }}
-          PGDATABASE_TEST: ${{ secrets.PGDATABASE_TEST }}
+          PGDATABASE_TEST: postgres # ${{ secrets.PGDATABASE_TEST }}
           PGPASSWORD_TEST: postgres # ${{ secrets.PGPASSWORD_TEST }}
           PGPORT_TEST: 5432 # ${{ secrets.PGPORT_TEST }}
           PGHOST: postgres # ${{ secrets.PGHOST_TEST }}
           PGUSER: postgres # ${{ secrets.PGUSER_TEST }}
-          PGDATABASE: ${{ secrets.PGDATABASE_TEST }}
+          PGDATABASE: postgres # ${{ secrets.PGDATABASE_TEST }}
           PGPASSWORD: postgres # ${{ secrets.PGPASSWORD_TEST }}
           PGPORT: 5432 # ${{ secrets.PGPORT_TEST }}
           ACCESS_TOKEN_KEY: ${{ secrets.ACCESS_TOKEN_KEY }}
