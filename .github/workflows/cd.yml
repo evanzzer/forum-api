@@ -10,17 +10,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: SSH and deploy app
-      uses: appleboy/ssh-action@0.1.4
-      with:
-        host: ${{ secrets.SSH_HOST }}
-        username: ${{ secrets.SSH_USERNAME }}
-        key: ${{ secrets.SSH_KEY }}
-        port: ${{ secrets.SSH_PORT }}
-        passphrase: ${{ secrets.SSH_PASSPHRASE }}
-        script: |
-          cd ~/forum-api
-          git pull origin master
-          npm install
-          npm run migrate up
-          pm2 restart forum-api
+      - name: Test Connection
+        run: |
+          echo ${{ secrets.SSH_KEY }} >> test.pem
+          ssh -i test.pem ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}
+          yes
+          whoami
+#    - name: SSH and deploy app
+#      uses: appleboy/ssh-action@master
+#      with:
+#        host: ${{ secrets.SSH_HOST }}
+#        username: ${{ secrets.SSH_USERNAME }}
+#        key: ${{ secrets.SSH_KEY }}
+#        port: ${{ secrets.SSH_PORT }}
+#        passphrase: ${{ secrets.SSH_PASSPHRASE }}
+#        script: |
+#          cd ~/forum-api
+#          git pull origin master
+#          npm install
+#          npm run migrate up
+#          pm2 restart forum-api
