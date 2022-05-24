@@ -4,6 +4,7 @@ const GetThreadDetailsUseCase = require('../../../../Applications/useCase/GetThr
 
 // Comments
 const AddCommentUseCase = require('../../../../Applications/useCase/AddCommentUseCase');
+const ToggleCommentLikeUseCase = require('../../../../Applications/useCase/ToggleCommentLikeUseCase');
 const DeleteCommentUseCase = require('../../../../Applications/useCase/DeleteCommentUseCase');
 
 // Replies
@@ -17,6 +18,7 @@ class ThreadsHandler {
         this.postThreadHandler = this.postThreadHandler.bind(this);
         this.postCommentHandler = this.postCommentHandler.bind(this);
         this.deleteCommentHandler = this.deleteCommentHandler.bind(this);
+        this.putCommentLikes = this.putCommentLikes.bind(this);
         this.postReplyHandler = this.postReplyHandler.bind(this);
         this.deleteReplyHandler = this.deleteReplyHandler.bind(this);
         this.getThreadHandler = this.getThreadHandler.bind(this);
@@ -71,6 +73,17 @@ class ThreadsHandler {
         return {
             status: 'success',
             message: 'comment berhasil dihapus',
+        };
+    }
+
+    async putCommentLikes(request) {
+        const toggleContainerUseCase = this._container.getInstance(ToggleCommentLikeUseCase.name);
+        const { threadId, commentId } = request.params;
+        const { id: userId } = request.auth.credentials;
+        await toggleContainerUseCase.execute(threadId, commentId, userId);
+
+        return {
+            status: 'success',
         };
     }
 

@@ -24,6 +24,17 @@ class CommentRepositoryPostgres extends CommentRepository {
         return new CreatedComment({ ...result.rows[0] });
     }
 
+    async addLikes(commentId, userId) {
+        const id = `likes-${this._idGenerator()}`;
+
+        const query = {
+            text: 'INSERT INTO likes VALUES($1, $2, $3)',
+            values: [id, userId, commentId],
+        };
+
+        await this._pool.query(query);
+    }
+
     async verifyCommentExists(commentId) {
         const query = {
             text: 'SELECT id FROM comments WHERE id = $1',
@@ -48,6 +59,16 @@ class CommentRepositoryPostgres extends CommentRepository {
         if (result.rows[0].owner !== userId) throw new AuthorizationError('Anda tidak berhak mengakses bagian ini!');
     }
 
+    async isLiked(commentId, userId) {
+        const query = {
+            text: 'SELECT id FROM likes WHERE owner = $1 AND comment = $2',
+            values: [userId, commentId],
+        };
+
+        const result = await this._pool.query(query);
+        return result.rowCount !== 0;
+    }
+
     async getCommentDetails(threadId) {
         const query = {
             text: `SELECT c.id, content, TO_CHAR(date, 'YYYY/MM/dd HH24:MI:SS') AS date, username, is_delete as "isDeleted"
@@ -59,10 +80,29 @@ class CommentRepositoryPostgres extends CommentRepository {
         return result.rows.map((c) => new DetailComment({ ...c }));
     }
 
+    async getCommentLikes(commentId) {
+        const query = {
+            text: 'SELECT COUNT(owner) as count FROM likes WHERE comment = $1',
+            values: [commentId],
+        };
+
+        const result = await this._pool.query(query);
+        return parseInt(result.rows[0].count, 10);
+    }
+
     async deleteCommentById(commentId, userId) {
         const query = {
             text: 'UPDATE comments SET is_delete = TRUE WHERE id = $1 AND owner = $2',
             values: [commentId, userId],
+        };
+
+        await this._pool.query(query);
+    }
+
+    async deleteLikes(commentId, userId) {
+        const query = {
+            text: 'DELETE FROM likes WHERE owner = $1 AND comment = $2',
+            values: [userId, commentId],
         };
 
         await this._pool.query(query);
