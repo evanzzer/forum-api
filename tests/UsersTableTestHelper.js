@@ -24,7 +24,7 @@ const UsersTableTestHelper = {
     },
 
     async cleanTable() {
-        await pool.query('TRUNCATE TABLE replies, comments, threads, users');
+        await pool.query('TRUNCATE TABLE replies, likes, comments, threads, users');
     },
 };
 

@@ -43,6 +43,8 @@ describe('GetThreadDetailsUseCase', () => {
                     isDeleted: true,
                 }),
             ]));
+        mockCommentRepository.getCommentLikes = jest.fn()
+            .mockImplementation(() => Promise.resolve(2));
         mockReplyRepository.getReplyDetails = jest.fn()
             .mockImplementation(() => Promise.resolve([
                 new DetailReply({
@@ -75,12 +77,15 @@ describe('GetThreadDetailsUseCase', () => {
         expect(threadDetails.comments).toBeDefined();
         threadDetails.comments.forEach((c) => {
             expect(c).toBeInstanceOf(DetailComment);
+            expect(c.likeCount).toEqual(2);
             expect(c.replies).toBeDefined();
             c.replies.forEach((r) => expect(r).toBeInstanceOf(DetailReply));
         });
         expect(mockThreadRepository.getThreadDetails).toBeCalledWith('thread-123');
         expect(mockCommentRepository.getCommentDetails).toBeCalledWith('thread-123');
+        expect(mockCommentRepository.getCommentLikes).toBeCalledWith('comment-123');
         expect(mockReplyRepository.getReplyDetails).toBeCalledWith('thread-123', 'comment-123');
+        expect(mockCommentRepository.getCommentLikes).toBeCalledWith('comment-456');
         expect(mockReplyRepository.getReplyDetails).toBeCalledWith('thread-123', 'comment-456');
     });
 });
