@@ -12,7 +12,7 @@ jobs:
     steps:
       - name: Test Connection
         run: |
-          echo ${{ secrets.SSH_KEY }} >> test.pem
+          echo "${{ secrets.SSH_KEY }}" >> test.pem
           ssh -i test.pem ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}
           yes
           whoami
